@@ -1,0 +1,13 @@
+{
+    "name": "larablocks/emailsms",
+    "description": "Send free sms messages from an email account",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Fowler",
+            "email": "fowlergac@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
