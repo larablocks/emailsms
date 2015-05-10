@@ -1,6 +1,6 @@
 <?php
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
+class TestCase extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Creates the application.
