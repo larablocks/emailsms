@@ -9,8 +9,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "laravel/framework": "5.0.*",
-        "guzzlehttp/guzzle": "~5.0"
+    "require-dev": {
+        "swiftmailer/swiftmailer": "~5.1"
     }
 }
