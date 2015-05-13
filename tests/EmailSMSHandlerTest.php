@@ -1,6 +1,11 @@
-<?php
+<?php namespace Larablocks\EmailSMS\PHPUnit;
 
-class EmailSMSHandlerTest extends TestCase
+use Larablocks\EmailSMS\EmailSMSHandler;
+use Mockery as m;
+use PHPUnit_Framework_TestCase;
+
+
+class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
 {
     private $stub;
     private $phoneProvider = 'vtext.com';
@@ -9,120 +14,133 @@ class EmailSMSHandlerTest extends TestCase
     private $body = 'body';
     private $senderEmail = 'foo@bar.com';
     private $senderName = 'Sender Name';
-    
+
+    private $mailer;
+    private $log;
+
+    public function __construct()
+    {
+        $this->mailer = m::mock('Illuminate\Mail\Mailer');
+        $this->mailer->shouldReceive('raw')->once();
+        $this->log = m::mock('Illuminate\Log\Writer');
+        $this->log->shouldReceive('error')->atLeast(1);
+    }
+
     public function testSendTrue()
     {
+        $this->assertTrue(true);
         $this->createStub();
         $this->buildSuccessfulStub();
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertTrue($emailSMSHandler->send($this->stub));
     }
-    
-    public function testValidatePhoneProviderFailNotString() 
+
+    public function testValidatePhoneProviderFailNotString()
     {
         $this->createStub();
-        
+
         $this->stub->method('getPhoneProvider')->willReturn(555);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
-    
-    public function testValidatePhoneProviderFailNotInArray() 
+
+    public function testValidatePhoneProviderFailNotInArray()
     {
         $this->createStub();
-        
+
         $this->stub->method('getPhoneProvider')->willReturn('foo.com');
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidatePhoneNumberFailNotNumeric() 
+    public function testValidatePhoneNumberFailNotNumeric()
     {
         $this->createStub();
-        
+
         $this->stub->method('getPhoneNumber')->willReturn('not a number');
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidatePhoneNumberFailNot10Digits() 
+    public function testValidatePhoneNumberFailNot10Digits()
     {
         $this->createStub();
-        
+
         $this->stub->method('getPhoneNumber')->willReturn(55555555555);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidateSubjectFailNotString() 
+    public function testValidateSubjectFailNotString()
     {
         $this->createStub();
-        
+
         $this->stub->method('getSubject')->willReturn(1);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidateBodyFailNotString() 
+    public function testValidateBodyFailNotString()
     {
         $this->createStub();
-        
+
         $this->stub->method('getBody')->willReturn(1);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidateSenderEmailFailNotString() 
+    public function testValidateSenderEmailFailNotString()
     {
         $this->createStub();
-        
+
         $this->stub->method('getSenderEmail')->willReturn(1);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidateSenderEmailFailNotValidEmail() 
+    public function testValidateSenderEmailFailNotValidEmail()
     {
         $this->createStub();
-        
+
         $this->stub->method('getSenderEmail')->willReturn('notvalidemail@gmail.');
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
 
-    public function testValidateSenderNameFailNotString() 
+    public function testValidateSenderNameFailNotString()
     {
         $this->createStub();
-        
+
         $this->stub->method('getSenderEmail')->willReturn(1);
-        
+
         $this->buildSuccessfulStub();
-        
-        $emailSMSHandler = new Larablocks\EmailSMS\EmailSMSHandler();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
     

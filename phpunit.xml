@@ -10,6 +10,12 @@
          stopOnFailure="false"
          syntaxCheck="false"
         >
+    <filter>
+        <whitelist>
+            <directory>src/EmailSMS</directory>
+            <directory>vendor/illuminate/mail</directory>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="Package Test Suite">
             <directory suffix=".php">tests</directory>

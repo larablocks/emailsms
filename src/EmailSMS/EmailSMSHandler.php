@@ -1,16 +1,19 @@
 <?php namespace Larablocks\EmailSMS;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailer;
+use Illuminate\Log\Writer;
 
 class EmailSMSHandler
 {
-
+    private $mailer;
+    private $log;
     private $emailSMS;
     private $validPhoneProviders;
 
-    public function __construct()
+    public function __construct(Mailer $mailer, Writer $log)
     {
+        $this->mailer = $mailer;
+        $this->log = $log;
         $this->buildValidPhoneProviders();
     }
 
@@ -29,7 +32,7 @@ class EmailSMSHandler
             return false;
         }
 
-        Mail::raw($emailSMS->getBody(), function($message) use($emailSMS)
+        $this->mailer->raw($emailSMS->getBody(), function($message) use($emailSMS)
         {
             $receiverEmail = $emailSMS->getPhoneNumber() . '@' . $emailSMS->getPhoneProvider();
 
@@ -86,12 +89,12 @@ class EmailSMSHandler
         $phoneProvider = $this->emailSMS->getPhoneProvider();
 
         if (!is_string($phoneProvider)) {
-            Log::error('Phone provider must be a string');
+            $this->log->error('Phone provider must be a string');
             return false;
         }
 
         if (!in_array($phoneProvider,$this->validPhoneProviders)){
-            Log::error('Phone provider not found');
+            $this->log->error('Phone provider not found');
             return false;
         }
 
@@ -108,14 +111,14 @@ class EmailSMSHandler
         $phoneNumber = $this->emailSMS->getPhoneNumber();
 
         if (!is_numeric($phoneNumber)) {
-            Log::error('Phone number must be of numeric type');
+            $this->log->error('Phone number must be of numeric type');
             return false;
         }
 
         $numberLength = strlen((string)$phoneNumber);
 
         if ($numberLength != 10) {
-            Log::error('Phone number must be 10 digits in length');
+            $this->log->error('Phone number must be 10 digits in length');
             return false;
         }
 
@@ -132,7 +135,7 @@ class EmailSMSHandler
         $subject = $this->emailSMS->getSubject();
 
         if (!is_string($subject)) {
-            Log::error('Subject must be a string');
+            $this->log->error('Subject must be a string');
             return false;
         }
 
@@ -151,7 +154,7 @@ class EmailSMSHandler
         $body = $this->emailSMS->getBody();
 
         if (!is_string($body)) {
-            Log::error('Message body must be a string');
+            $this->log->error('Message body must be a string');
             return false;
         }
 
@@ -168,12 +171,12 @@ class EmailSMSHandler
         $senderEmail = $this->emailSMS->getSenderEmail();
 
         if (!is_string($senderEmail)) {
-            Log::error('Sender email must be a string');
+            $this->log->error('Sender email must be a string');
             return false;
         }
 
         if (filter_var($senderEmail, FILTER_VALIDATE_EMAIL) === false) {
-            Log::error('Invalid sender email');
+            $this->log->error('Invalid sender email');
             return false;
         }
 
@@ -190,7 +193,7 @@ class EmailSMSHandler
         $senderName = $this->emailSMS->getSenderName();
 
         if (!is_string($senderName)) {
-            Log::error('Sender name must be a string');
+            $this->log->error('Sender name must be a string');
             return false;
         }
 
