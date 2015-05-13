@@ -147,7 +147,7 @@ class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
     {
         $this->createStub();
 
-        $this->stub->method('getSenderEmail')->willReturn(1);
+        $this->stub->method('getSenderName')->willReturn(1);
 
         $this->buildSuccessfulStub();
 
