@@ -1,4 +1,4 @@
-https://travis-ci.org/larablocks/emailsms.svg?branch=master
+[![Build Status](https://travis-ci.org/larablocks/emailsms.svg?branch=master)](https://travis-ci.org/larablocks/emailsms)
 
 EmailSMS
 ===============
