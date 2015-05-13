@@ -35,14 +35,6 @@ Note: The EmailSMS facade will load automatically, so you don't have to add it t
 'EmailSMS' => 'Larablocks\EmailSMS\EmailSMS',
 ```
 
-To publish the default config file `config/emailsms.php` along with the default email view files use the artisan command: 
-
-`vendor:publish --vendor="Larablocks\EmailSMS\EmailSMSServiceProvider"`
-
-If you do not want to publish the view files and only publish the config then use the artisan command:
-
-`vendor:publish --vendor="Larablocks\EmailSMS\EmailSMSServiceProvider" --tag="config"`
-
 ## Usage as a Facade to send a text message
 
 ####Send Message:
