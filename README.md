@@ -1,3 +1,5 @@
+https://travis-ci.org/larablocks/emailsms.svg?branch=master
+
 EmailSMS
 ===============
 EmailSMS is a simple package that facilitates sending free text messages from email accounts. Simply pass an object that binds to the interface (EmailSMSInterface) to send a text message to the phone number specified in the object
