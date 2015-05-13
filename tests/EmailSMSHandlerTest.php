@@ -26,10 +26,21 @@ class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
         $this->log->shouldReceive('error')->atLeast(1);
     }
 
-    public function testSendTrue()
+    public function testSendTrueSubjectIsString()
     {
-        $this->assertTrue(true);
         $this->createStub();
+        $this->buildSuccessfulStub();
+
+        $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
+        $this->assertTrue($emailSMSHandler->send($this->stub));
+    }
+
+    public function testSendTrueSubjectIsNull()
+    {
+        $this->createStub();
+
+        $this->stub->method('getSubject')->willReturn(null);
+
         $this->buildSuccessfulStub();
 
         $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
@@ -88,7 +99,7 @@ class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
     {
         $this->createStub();
 
-        $this->stub->method('getSubject')->willReturn(1);
+        $this->stub->method('getSubject')->willReturn([]);
 
         $this->buildSuccessfulStub();
 
@@ -143,12 +154,12 @@ class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
         $emailSMSHandler = new EmailSMSHandler($this->mailer, $this->log);
         $this->assertFalse($emailSMSHandler->send($this->stub));
     }
-    
+
     private function createStub()
     {
         $this->stub = $this->getMock('\Larablocks\EmailSMS\EmailSMSInterface');
     }
-    
+
     private function buildSuccessfulStub()
     {
         // Configure the stub.
@@ -159,4 +170,5 @@ class EmailSMSHandlerTest extends PHPUnit_Framework_TestCase
         $this->stub->method('getSenderEmail')->willReturn($this->senderEmail);
         $this->stub->method('getSenderName')->willReturn($this->senderName);
     }
+
 }

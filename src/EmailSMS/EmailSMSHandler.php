@@ -36,7 +36,10 @@ class EmailSMSHandler
         {
             $receiverEmail = $emailSMS->getPhoneNumber() . '@' . $emailSMS->getPhoneProvider();
 
-            $message->subject($emailSMS->getSubject());
+            if(!is_null($emailSMS->getSubject())) {
+                $message->subject($emailSMS->getSubject());
+            }
+
             $message->from($emailSMS->getSenderEmail(), $emailSMS->getSenderName());
             $message->to($receiverEmail);
         });
@@ -126,7 +129,7 @@ class EmailSMSHandler
     }
 
     /**
-     * Validate the text subject
+     * Validate the text subject. Optional.
      *
      * @return bool
      */
@@ -134,12 +137,10 @@ class EmailSMSHandler
     {
         $subject = $this->emailSMS->getSubject();
 
-        if (!is_string($subject)) {
-            $this->log->error('Subject must be a string');
+        if (!is_string($subject) && !is_null($subject)) {
+            $this->log->error('Subject must be either a string or null');
             return false;
         }
-
-
 
         return true;
     }
